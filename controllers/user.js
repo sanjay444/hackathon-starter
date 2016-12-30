@@ -92,6 +92,7 @@ exports.postSignup = (req, res, next) => {
   });
 
   User.findOne({ email: req.body.email }, (err, existingUser) => {
+    if (err) { return next(err); }
     if (existingUser) {
       req.flash('errors', { msg: 'Account with that email address already exists.' });
       return res.redirect('/signup');
@@ -250,7 +251,7 @@ exports.postReset = (req, res, next) => {
   }
 
   async.waterfall([
-    function (done) {
+    function resetPassword(done) {
       User
         .findOne({ passwordResetToken: req.params.token })
         .where('passwordResetExpires').gt(Date.now())
@@ -271,7 +272,7 @@ exports.postReset = (req, res, next) => {
           });
         });
     },
-    function (user, done) {
+    function sendResetPasswordEmail(user, done) {
       const transporter = nodemailer.createTransport({
         service: 'SendGrid',
         auth: {
@@ -325,14 +326,15 @@ exports.postForgot = (req, res, next) => {
   }
 
   async.waterfall([
-    function (done) {
+    function createRandomToken(done) {
       crypto.randomBytes(16, (err, buf) => {
         const token = buf.toString('hex');
         done(err, token);
       });
     },
-    function (token, done) {
+    function setRandomToken(token, done) {
       User.findOne({ email: req.body.email }, (err, user) => {
+        if (err) { return done(err); }
         if (!user) {
           req.flash('errors', { msg: 'Account with that email address does not exist.' });
           return res.redirect('/forgot');
@@ -344,7 +346,7 @@ exports.postForgot = (req, res, next) => {
         });
       });
     },
-    function (token, user, done) {
+    function sendForgotPasswordEmail(token, user, done) {
       const transporter = nodemailer.createTransport({
         service: 'SendGrid',
         auth: {

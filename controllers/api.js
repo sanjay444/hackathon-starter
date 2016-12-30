@@ -1,13 +1,12 @@
 'use strict';
-const _ = require('lodash');
+
 const async = require('async');
-const validator = require('validator');
 const request = require('request');
 const cheerio = require('cheerio');
 const graph = require('fbgraph');
 const LastFmNode = require('lastfm').LastFmNode;
 const tumblr = require('tumblr.js');
-const Github = require('github-api');
+const GitHub = require('github');
 const Twit = require('twit');
 const stripe = require('stripe')(process.env.STRIPE_SKEY);
 const twilio = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
@@ -97,24 +96,11 @@ exports.getTumblr = (req, res, next) => {
 exports.getFacebook = (req, res, next) => {
   const token = req.user.tokens.find(token => token.kind === 'facebook');
   graph.setAccessToken(token.accessToken);
-  async.parallel({
-    getMyProfile: (done) => {
-      graph.get(`${req.user.facebook}?fields=id,name,email,first_name,last_name,gender,link,locale,timezone`, (err, me) => {
-        done(err, me);
-      });
-    },
-    getMyFriends: (done) => {
-      graph.get(`${req.user.facebook}/friends`, (err, friends) => {
-        done(err, friends.data);
-      });
-    }
-  },
-  (err, results) => {
+  graph.get(`${req.user.facebook}?fields=id,name,email,first_name,last_name,gender,link,locale,timezone`, (err, results) => {
     if (err) { return next(err); }
     res.render('api/facebook', {
       title: 'Facebook API',
-      me: results.getMyProfile,
-      friends: results.getMyFriends
+      profile: results
     });
   });
 };
@@ -123,8 +109,9 @@ exports.getFacebook = (req, res, next) => {
  * GET /api/scraping
  * Web scraping example using Cheerio library.
  */
-exports.getScraping = (req, res) => {
+exports.getScraping = (req, res, next) => {
   request.get('https://news.ycombinator.com/', (err, request, body) => {
+    if (err) { return next(err); }
     const $ = cheerio.load(body);
     const links = [];
     $('.title a[href^="http"], a[href^="https"]').each((index, element) => {
@@ -142,10 +129,8 @@ exports.getScraping = (req, res) => {
  * GitHub API Example.
  */
 exports.getGithub = (req, res, next) => {
-  const token = req.user.tokens.find(token => token.kind === 'github');
-  const github = new Github({ token: token.accessToken });
-  const repo = github.getRepo('sahat', 'satellizer');
-  repo.getDetails((err, repo) => {
+  const github = new GitHub();
+  github.repos.get({ user: 'sahat', repo: 'hackathon-starter' }, (err, repo) => {
     if (err) { return next(err); }
     res.render('api/github', {
       title: 'GitHub API',
@@ -174,6 +159,7 @@ exports.getNewYorkTimes = (req, res, next) => {
     'api-key': process.env.NYT_KEY
   };
   request.get({ url: 'http://api.nytimes.com/svc/books/v2/lists', qs: query }, (err, request, body) => {
+    if (err) { return next(err); }
     if (request.statusCode === 403) {
       return next(new Error('Invalid New York Times API Key'));
     }
@@ -199,8 +185,12 @@ exports.getLastfm = (req, res, next) => {
       lastfm.request('artist.getInfo', {
         artist: 'Roniit',
         handlers: {
-          success: (data) => done(null, data),
-          error: (err) => done(err)
+          success: (data) => {
+            done(null, data);
+          },
+          error: (err) => {
+            done(err);
+          }
         }
       });
     },
@@ -208,8 +198,12 @@ exports.getLastfm = (req, res, next) => {
       lastfm.request('artist.getTopTracks', {
         artist: 'Roniit',
         handlers: {
-          success: (data) => done(null, data.toptracks.track.slice(0, 10)),
-          error: (err) => done(err)
+          success: (data) => {
+            done(null, data.toptracks.track.slice(0, 10));
+          },
+          error: (err) => {
+            done(err);
+          }
         }
       });
     },
@@ -217,8 +211,12 @@ exports.getLastfm = (req, res, next) => {
       lastfm.request('artist.getTopAlbums', {
         artist: 'Roniit',
         handlers: {
-          success: (data) => done(null, data.topalbums.album.slice(0, 3)),
-          error: (err) => done(err)
+          success: (data) => {
+            done(null, data.topalbums.album.slice(0, 3));
+          },
+          error: (err) => {
+            done(err);
+          }
         }
       });
     }
@@ -284,7 +282,7 @@ exports.postTwitter = (req, res, next) => {
     access_token: token.accessToken,
     access_token_secret: token.tokenSecret
   });
-  T.post('statuses/update', { status: req.body.tweet }, (err, data, response) => {
+  T.post('statuses/update', { status: req.body.tweet }, (err) => {
     if (err) { return next(err); }
     req.flash('success', { msg: 'Your tweet has been posted.' });
     res.redirect('/api/twitter');
@@ -581,14 +579,14 @@ exports.getLob = (req, res, next) => {
  * GET /api/upload
  * File Upload API example.
  */
- 
-exports.getFileUpload = (req, res, next) => {
+
+exports.getFileUpload = (req, res) => {
   res.render('api/upload', {
     title: 'File Upload'
   });
 };
 
-exports.postFileUpload = (req, res, next) => {
+exports.postFileUpload = (req, res) => {
   req.flash('success', { msg: 'File was uploaded successfully.' });
   res.redirect('/api/upload');
 };
@@ -643,7 +641,7 @@ exports.postPinterest = (req, res, next) => {
   });
 };
 
-exports.getGoogleMaps = (req, res, next) => {
+exports.getGoogleMaps = (req, res) => {
   res.render('api/google-maps', {
     title: 'Google Maps API'
   });

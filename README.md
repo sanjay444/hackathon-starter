@@ -2,11 +2,11 @@
 Hackathon Starter 
 =======================
 
-[![Donate](https://img.shields.io/badge/paypal-donate-blue.svg)](https://paypal.me/sahat) [![Book session on Codementor](https://cdn.codementor.io/badges/book_session_github.svg)](https://www.codementor.io/sahatyalkabov?utm_source=github&utm_medium=button&utm_term=sahatyalkabov&utm_campaign=github) [![Dependency Status](https://david-dm.org/sahat/hackathon-starter/status.svg?style=flat)](https://david-dm.org/sahat/hackathon-starter) [![Build Status](https://travis-ci.org/sahat/hackathon-starter.svg?branch=master)](https://travis-ci.org/sahat/hackathon-starter) [![Join the chat at https://gitter.im/sahat/hackathon-starter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sahat/hackathon-starter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Thinkful Pair on Node](https://tf-assets-staging.s3.amazonaws.com/badges/thinkful_repo_badge.svg)](http://start.thinkful.com/node/)
+[![Dependency Status](https://david-dm.org/sahat/hackathon-starter/status.svg?style=flat)](https://david-dm.org/sahat/hackathon-starter) [![Build Status](https://travis-ci.org/sahat/hackathon-starter.svg?branch=master)](https://travis-ci.org/sahat/hackathon-starter) [![Join the chat at https://gitter.im/sahat/hackathon-starter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sahat/hackathon-starter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Thinkful Pair on Node](https://tf-assets-staging.s3.amazonaws.com/badges/thinkful_repo_badge.svg)](http://start.thinkful.com/node/)
 
 **Live Demo**: http://hackathonstarter-sahat.rhcloud.com
 
-Jump to [What's new in 4.2.1?](#changelog)
+Jump to [What's new in 4.3.0?](#changelog)
 
 :bulb: Looking for ES5 code? [Click here](https://github.com/sahat/hackathon-starter/tree/es5).
 
@@ -22,6 +22,20 @@ When I started this project, my primary focus was on **simplicity** and **ease o
 I also tried to make it as **generic** and **reusable** as possible to cover most use cases of hackathon web apps,
 without being too specific. In the worst case you can use this as a learning guide for your projects,
 if for example you are only interested in **Sign in with Google** authentication and nothing else.
+
+### Testimonials
+
+> [**“Nice! That README alone is already gold!”**](https://www.producthunt.com/tech/hackathon-starter#comment-224732)<br>
+> — Adrian Le Bas
+
+> [**“Awesome. Simply awesome.”**](https://www.producthunt.com/tech/hackathon-starter#comment-224966)<br>
+> — Steven Rueter
+
+> [**“I'm using it for a year now and many projects, it's an awesome boilerplate and the project is well maintained!”**](https://www.producthunt.com/tech/hackathon-starter#comment-228610)<br>
+> — Kevin Granger
+
+> **“Small world with Sahat's project. We were using his hackathon starter for our hackathon this past weekend and got some prizes. Really handy repo!”**<br>
+> — Interview candidate for one of the companies I used to work with.
 
 <h4 align="center">Modern Theme</h4>
 
@@ -51,7 +65,10 @@ Table of Contents
 - [Pro Tips](#pro-tips)
 - [FAQ](#faq)
 - [How It Works](#how-it-works-mini-guides)
-- [Mongoose Cheatsheet](#mongoose-cheatsheet)
+- [Cheatsheets](#cheatsheets)
+    - [ES6](#-es6-cheatsheet)
+    - [JavaScript Date](#-javascript-date-cheatsheet)
+    - [Mongoose Cheatsheet](#mongoose-cheatsheet)
 - [Deployment](#deployment)
 - [Changelog](#changelog)
 - [Contributing](#contributing)
@@ -112,6 +129,10 @@ cd myproject
 # Install NPM dependencies
 npm install
 
+# Or, if you prefer to use `yarn` instead of `npm`
+yarn install
+
+# Then simply start your app
 node app.js
 ```
 
@@ -121,6 +142,16 @@ server. Once installed, instead of `node app.js` use `nodemon app.js`. It will
 save you a lot of time in the long run, because you won't need to manually
 restart the server each time you make a small change in code. To install, run
 `sudo npm install -g nodemon`.
+
+Yarn vs NPM
+-----------
+Yarn is a new JavaScript package manager built by Facebook, Google, Exponent and Tilde. Yarn is not an attempt to replace `npm`, 
+it's simply an alternative CLI client for fetching modules from the npm registry but it does have some unique benefits over using `npm`,
+most noticeably speed and consistency (via a lock file which ensures that only specific versions of dependencies are installed).
+Hackathon Starter includes a `yarn.lock` file by default and as project dependencies are updated, this file will be updated to reflect those changes.
+
+To upgrade your local dependencies using Yarn, simply run `yarn upgrade`. This will update all dependencies to their latest version based on the [version range](https://docs.npmjs.com/getting-started/semantic-versioning#semver-for-consumers) specified in the `package.json` file. The yarn.lock file will be recreated as well.
+For further information, please see the official documention for [managing dependencies](https://yarnpkg.com/en/docs/managing-dependencies) and [upgrading dependencies](https://yarnpkg.com/en/docs/cli/upgrade). This [Yarn vs NPM](https://www.sitepoint.com/yarn-vs-npm/) article by SitePoint also has some very useful information.
 
 Obtaining API Keys
 ------------------
@@ -308,10 +339,10 @@ Project Structure
 | **views/partials**/footer.pug      | Footer partial template.                                     |
 | **views**/layout.pug               | Base template.                                               |
 | **views**/home.pug                 | Home page template.                                          |
-| .travis.yml                        | [Travis CI](https://travis-ci.org/) integration.             |
 | .env.example                       | Your API keys, tokens, passwords and database URI.           |
 | app.js                             | The main application file.                                   |
 | package.json                       | NPM dependencies.                                            |
+| yarn.lock                          | Contains exact versions of NPM dependencies in package.json. |
 
 **Note:** There is no preference how you name or structure your views.
 You could place all your templates in a top-level `views` directory without
@@ -329,7 +360,7 @@ List of Packages
 | cheerio                         | Scrape web pages using jQuery-style syntax.                           |
 | clockwork                       | Clockwork SMS API library.                                            |
 | connect-mongo                   | MongoDB session store for Express.                                    |
-| dotenv                          | Loads environment variables from .env file.                                                |
+| dotenv                          | Loads environment variables from .env file.                           |
 | express                         | Node.js web framework.                                                |
 | body-parser                     | Express 4 middleware.                                                 |
 | express-session                 | Express 4 middleware.                                                 |
@@ -338,9 +369,10 @@ List of Packages
 | errorhandler                    | Express 4 middleware.                                                 |
 | serve-favicon                   | Express 4 middleware offering favicon serving and caching.            |
 | express-flash                   | Provides flash messages for Express.                                  |
+| express-status-monitor          | Reports real-time server metrics for Express.                         |
 | express-validator               | Easy form validation for Express.                                     |
 | fbgraph                         | Facebook Graph API library.                                           |
-| github-api                      | GitHub API library.                                                   |
+| github                          | GitHub API library.                                                   |
 | pug (jade)                      | Template engine for Express.                                          |
 | lastfm                          | Last.fm API library.                                                  |
 | instagram-node                  | Instagram API library.                                                |
@@ -585,7 +617,7 @@ page and come back to the login page, that error message will be gone. It is onl
 This project uses *express-flash* module for flash messages. And that
 module is built on top of *connect-flash*, which is what I used in
 this project initially. With *express-flash* you don't have to
-explicity send a flash message to every view inside `res.render()`.
+explicitly send a flash message to every view inside `res.render()`.
 All flash messages are available in your views via `messages` object by default,
 thanks to *express-flash*.
 
@@ -718,7 +750,7 @@ And here is how a route would look if it required an *authentication* and an *au
 app.route('/api/twitter')
   .all(passportConf.isAuthenticated)
   .all(passportConf.isAuthorized)
-  .get(apiController.getTwitter);
+  .get(apiController.getTwitter)
   .post(apiController.postTwitter)
 ```
 
@@ -728,11 +760,13 @@ when you have one route per line.
 
 **Step 2.** Create a new schema and a model `Book.js` inside the *models* directory.
 ```js
-var bookSchema = new mongoose.Schema({
+const mongoose = require('mongoose');
+
+const bookSchema = new mongoose.Schema({
   name: String
 });
 
-var Book = mongoose.model('Book', bookSchema);
+const Book = mongoose.model('Book', bookSchema);
 module.exports = Book;
 ```
 
@@ -742,7 +776,7 @@ module.exports = Book;
  * GET /books
  * List all books.
  */
-var Book = require('../models/Book.js');
+const Book = require('../models/Book.js');
 
 exports.getBooks = (req, res) => {
   Book.find((err, docs) => {
@@ -753,7 +787,7 @@ exports.getBooks = (req, res) => {
 
 **Step 4.** Import that controller in `app.js`.
 ```js
-var bookController = require('./controllers/book');
+const bookController = require('./controllers/book');
 ```
 
 **Step 5.** Create `books.pug` template.
@@ -814,7 +848,7 @@ And what if you are deploying to OpenShift? They do support websockets, but it i
 preview state. So, for OpenShift you would need to change the socket.io connect URI to the following:
 
 ```js
-var socket = io.connect('http://yoursite-namespace.rhcloud.com:8000');
+const socket = io.connect('http://yoursite-namespace.rhcloud.com:8000');
 ```
 
 Wait, why is it on port 8000? Who knows, and if I didn't run across this [blog post](http://velin-georgiev-blog.appspot.com/blog/set-up-nodejs-express-socketio-application-using-websockets-on-openshift-by-red-hat/)
@@ -830,12 +864,12 @@ First you need to install socket.io:
 npm install socket.io --save
 ```
 
-Replace `var app = express();` with the following code:
+Replace `const app = express();` with the following code:
 
 ```js
-var app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 ```
 
 I like to have the following code organization in `app.js` (from top to bottom): module dependencies,
@@ -885,7 +919,7 @@ your main template file, add this to `head` block.
 ```jade
 script(src='/socket.io/socket.io.js')
 script.
-    var socket = io.connect(window.location.href);
+    let socket = io.connect(window.location.href);
     socket.on('greet', function (data) {
       console.log(data);
       socket.emit('respond', { message: 'Hey there, server!' });
@@ -903,7 +937,7 @@ script code into `main.js`, inside the `$(document).ready()` function:
 $(document).ready(function() {
 
   // Place JavaScript code here...
-  var socket = io.connect(window.location.href);
+  let socket = io.connect(window.location.href);
   socket.on('greet', function (data) {
     console.log(data);
     socket.emit('respond', { message: 'Hello to you too, Mr.Server!' });
@@ -913,9 +947,204 @@ $(document).ready(function() {
 ```
 
 And we are done!
+Cheatsheets
+-----------
 
-Mongoose Cheatsheet
--------------------
+### <img src="https://frontendmasters.com/assets/es6-logo.png" height="34" align="top"> ES6 Cheatsheet
+
+#### Declarations
+
+Declares a read-only named constant.
+
+```js
+const name = 'yourName';
+```
+
+Declares a block scope local variable.
+```js
+let index = 0;
+```
+
+#### Template Strings
+
+Using the **\`${}\`** syntax, strings can embed expressions.
+
+```js
+const name = 'Oggy';
+const age = 3;
+
+console.log(`My cat is named ${name} and is ${age} years old.`);
+```
+
+#### Modules
+
+To import functions, objects or primitives exported from an external module. These are the most common types of importing.
+
+```js
+import name from 'module-name';
+```
+```js
+import * as name from 'module-name';
+```
+```js
+import { foo, bar } from 'module-name';
+```
+
+To export functions, objects or primitives from a given file or module.
+
+```js
+export { myFunction };
+```
+```js
+export const name = 'yourName';
+```
+```js
+export default myFunctionOrClass
+```
+
+#### Spread Operator
+
+The spread operator allows an expression to be expanded in places where multiple arguments (for function calls) or multiple elements (for array literals) are expected.
+
+```js
+myFunction(...iterableObject);
+```
+```jsx
+<ChildComponent {...this.props} />
+```
+
+#### Promises
+
+A Promise is used in asynchronous computations to represent an operation that hasn't completed yet, but is expected in the future.
+
+```js
+var p = new Promise(function(resolve, reject) { });
+```
+
+The `catch()` method returns a Promise and deals with rejected cases only.
+
+```js
+p.catch(function(reason) { /* handle rejection */ });
+```
+
+The `then()` method returns a Promise. It takes 2 arguments: callback for the success & failure cases.
+
+```js
+p.then(function(value) { /* handle fulfillment */, function(reason) { /* handle rejection */ });
+```
+
+The `Promise.all(iterable)` method returns a promise that resolves when all of the promises in the iterable argument have resolved, or rejects with the reason of the first passed promise that rejects.
+
+```js
+Promise.all([p1, p2, p3]).then(function(values) { console.log(values) });
+```
+
+#### Arrow Functions
+
+Arrow function expression. Shorter syntax & lexically binds the `this` value. Arrow functions are anonymous.
+
+```js
+singleParam => { statements }
+```
+```js
+() => { statements }
+```
+```js
+(param1, param2) => expression
+```
+```js
+const arr = [1, 2, 3, 4, 5];
+const squares = arr.map(x => x * x);
+```
+
+#### Classes
+
+The class declaration creates a new class using prototype-based inheritance.
+
+```js
+class Person {
+  constructor(name, age, gender) {
+    this.name   = name;
+    this.age    = age;
+    this.gender = gender;
+  }
+
+  incrementAge() {
+    this.age++;
+  }
+}
+```
+
+:gift: **Credits**: [DuckDuckGo](https://duckduckgo.com/?q=es6+cheatsheet&ia=cheatsheet&iax=1) and [@DrkSephy](https://github.com/DrkSephy/es6-cheatsheet).
+
+:top: <sub>[**back to top**](#table-of-contents)</sub>
+
+### <img src="http://i.stack.imgur.com/Mmww2.png" height="34" align="top"> JavaScript Date Cheatsheet
+
+#### Unix Timestamp (seconds)
+
+```js
+Math.floor(Date.now() / 1000);
+```
+
+#### Add 30 minutes to a Date object
+
+```js
+var now = new Date();
+now.setMinutes(now.getMinutes() + 30);
+```
+
+#### Date Formatting
+
+```js
+// DD-MM-YYYY
+var now = new Date();
+
+var DD = now.getDate();
+var MM = now.getMonth() + 1;
+var YYYY = now.getFullYear();
+
+if (DD < 10) {
+  DD = '0' + DD;
+} 
+
+if (MM < 10) {
+  MM = '0' + MM;
+}
+
+console.log(MM + '-' + DD + '-' + YYYY); // 03-30-2016
+```
+```js
+// hh:mm (12 hour time with am/pm)
+var now = new Date();
+var hours = now.getHours();
+var minutes = now.getMinutes();
+var amPm = hours >= 12 ? 'pm' : 'am';
+
+hours = hours % 12;
+hours = hours ? hours : 12;
+minutes = minutes < 10 ? '0' + minutes : minutes;
+
+console.log(hours + ':' + minutes + ' ' + amPm); // 1:43 am
+```
+
+#### Next week Date object
+
+```js
+var today = new Date();
+var nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+```
+
+#### Yesterday Date object
+
+```js
+var today = new Date();
+var yesterday = date.setDate(date.getDate() - 1);
+```
+
+:top: <sub>[**back to top**](#table-of-contents)</sub>
+
+###Mongoose Cheatsheet
 
 #### Find all users:
 ```js
@@ -926,7 +1155,7 @@ User.find((err, users) => {
 
 #### Find a user by email:
 ```js
-var userEmail = 'example@gmail.com';
+let userEmail = 'example@gmail.com';
 User.findOne({ email: userEmail }, (err, user) => {
   console.log(user);
 });
@@ -954,6 +1183,7 @@ User.aggregate({ $group: { _id: null, total: { $sum: '$votes' } } }, (err, votes
   console.log(votesCount.total);
 });
 ```
+:top: <sub>[**back to top**](#table-of-contents)</sub>
 
 Deployment
 ----------
@@ -1101,6 +1331,21 @@ Also, be sure to check out the [Jump-start your hackathon efforts with DevOps Se
 
 Changelog
 ---------
+
+### 4.3.0 (November 6, 2016)
+- [Added new theme](http://demos.creative-tim.com/get-shit-done/index.html) by Creative Tim (Thanks @conacelelena)
+- Added ESLint configuration to *package.json*
+- Added *yarn.lock* (Thanks @niallobrien)
+- Added **express-status-monitor** (to see it in action: `/status`)
+- Added missing error handling checks (Thanks @dskrepps)
+- Server address during the app startup is now clickable (⌘ + LMB) (Thanks @niallobrien)
+- Fixed redirect issue in the account page (Thanks @YasharF)
+- Fixed `Mongoose.promise` issue (Thanks @starcharles)
+- Removed "My Friends" from Facebook API example due to Graph API changes
+- Removed iOS7 theme
+- `User` model unit tests improvements (Thanks @andela-rekemezie)
+- Switched from **github-api** to the more popular **github** NPM module
+- Updated Yarn and NPM dependencies
 
 ### 4.2.1 (September 6, 2016)
 - User model minor code refactoring
